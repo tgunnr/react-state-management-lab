@@ -78,35 +78,55 @@ const zombieFighters = [
   },
 ];
 
+const Fighters = (props) => {
 
-
+  const { name, price, strength, agility, img } = props
+  return (
+    <>
+          <li key={price}>
+            <p><img src={img}/></p>
+            <p>{name}</p>
+            <p>Price: {price}</p>
+            <p>Strenght: {strength}</p>
+            <p>Agility: {agility}</p>
+            {props.handleAddFighter 
+            ? <button onClick={() => props.handleAddFighter(props)}>Add</button> 
+            : <button onClick={() => props.handleRemoveFighter(props)}>Remove</button>
+            }
+          </li>
+    </>
+  )
+}
 
 const App = () => {
+  const [availableFighters, setAvailableFighters] = useState(zombieFighters)
+  const [unavailbleFighters, setUnavailbleFighters] = useState(team)
   
-  const Fighters = (props) => {
-    const { name, price, strength, agility, img } = props
-    return (
-      <>
-            <li key={name}>
-              <p>{name}</p>
-              <p>{price}</p>
-              <p>{strength}</p>
-              <p>{agility}</p>
-              <p><a href={img}/></p>
-            </li>
-      </>
-    )
+  const handleAddFighter = (fighter) => {
+    console.log(fighter)
+    setUnavailbleFighters([...unavailbleFighters, fighter])
+    setAvailableFighters(availableFighters.filter(el => el.price !== fighter.price))
+  }
+
+  const handleRemoveFighter = fighter => {
+    setAvailableFighters(unavailbleFighters.filter(el => el.price !== fighter.price))
+    setAvailableFighters([...availableFighters, fighter])
   }
 
   return (
     <>
-      <section>
-        <ul>
-        {zombieFighters.map((fighter) => (
-          <Fighters key={fighter.name} {...fighter}/>
-        ))}
-        </ul>
-      </section>
+      <h2>Availble Money: {money}</h2>
+      <h2>Fighters:</h2>
+        <section>
+          <ul>
+          {zombieFighters.map((fighter) => (
+            <Fighters key={fighter.name} {...fighter}
+            handleAddFighter={handleAddFighter}
+            handleRemoveFighter={handleRemoveFighter}
+            />
+          ))}
+          </ul>
+        </section>
     </>
   );
 }
